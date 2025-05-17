@@ -1,12 +1,10 @@
-import { FontAwesome } from '@expo/vector-icons';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 
 
-export default function InputWithIcon({ iconName, placeholder, secureTextEntry, color, keyboardType, onChangeText, value}) {
+export default function IconInput({ iconName, placeholder, secureTextEntry, color, keyboardType, onChangeText, value}) {
     return (
         <View style={styles.container} >
-            <FontAwesome name={iconName} size={20} color="#666" style={styles.icon}/>
             <TextInput keyboardType={keyboardType} onChangeText={onChangeText} value={value} style={styles.input} placeholder={placeholder} secureTextEntry={secureTextEntry} placeholderTextColor={color}/>
         </View>
         

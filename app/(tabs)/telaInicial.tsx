@@ -1,19 +1,15 @@
-import { FontAwesome } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import IconInput from '../../components/ui/IconInput';
+import { Alert, StyleSheet, View } from 'react-native';
 
 
 
-
-export default function LoginScreen() {
+export default function HomeScreen() {
   
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
 const handleLogin = async () => {
@@ -31,21 +27,16 @@ const handleLogin = async () => {
     });
 
     if (response.status === 200) {
-
-      const token = response.data.token;
-      await AsyncStorage.setItem('userToken', token)
-
       Alert.alert('Login efetuado com sucesso!');
       console.log('login com sucesso')
-
-      router.push('/(tabs)/forgotPassword')
+      router.push('/(tabs)/signUp');
       
     }
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         // Exibe mensagem amigável ao usuário, se disponível
-        Alert.alert('Erro', error.response.data?.message || 'Senha ou email incorretos');
+        Alert.alert('Erro', error.response.data?.message || 'Erro no servidor');
         console.log('Erro de resposta do servidor', error.response.data);
       } else if (error.request) {
         Alert.alert('Erro', 'Servidor não respondeu. Tente novamente');
@@ -62,63 +53,9 @@ const handleLogin = async () => {
 
   
   
+  
   return (
-   <View style={styles.container}>
-    <StatusBar barStyle={'light-content'} backgroundColor={'#0D223F'} />
-
-      <View style= {styles.logoContainer}>
-        <Image
-          source={require('../../assets/images/logoImpetus.png')}
-          resizeMode="contain"
-          style={styles.logo}
-          />
-        <Text style={styles.loginTitle}>IMPETUS</Text>
-      </View>
-
-    <View style={styles.contentContainer}>
-
-        <IconInput value={email} onChangeText={setEmail} keyboardType={"email-address"} iconName="envelope" placeholder="Email ou Nome de Usuário" secureTextEntry={false} color={'#A9A9A9'}/>
-        <IconInput value={password} onChangeText={setPassword} keyboardType={"default"} iconName="lock" placeholder="Senha" secureTextEntry={true} color={'#A9A9A9'}/> 
-        
-        <View style={{flexDirection: 'row', justifyContent: 'flex-end', width: '100%', marginBottom: 20}}>
-          <TouchableOpacity onPress={() => router.push('/(tabs)/forgotPassword')}>
-            <Text style={{color: '#48D1CC'}}>Esqueci minha senha</Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity
-          style={[styles.loginButton, loading && {opacity: 0.6}]}
-          onPress={handleLogin}
-          disabled={loading}
-          >
-          <Text style={styles.loginButtonText}>
-            {loading ? 'Carregando...' : 'Entrar'}
-          </Text>
-        </TouchableOpacity>
-
-    </View>
-
-    <View style={styles.containerSeparator}>
-      <View style={styles.separator}>
-        <View style={styles.line}></View>
-        <Text style={styles.textLine}>OU</Text>
-        <View style={styles.line}></View>
-      </View>
-
-    </View>  
-     
-    <TouchableOpacity style={styles.googleBtn}>
-      <View style={styles.content}>
-        <FontAwesome name="google" size={25} color="#0D223F" />
-        <Text style={styles.text}>ENTRAR COM O GOOGLE</Text>
-      </View>
-    </TouchableOpacity>
-
-    <View style= {styles.signupContainer}>
-      <Text style={styles.signupText}>Ainda não tem uma conta?</Text>
-      <TouchableOpacity onPress={() => router.push('/(tabs)/signUp')}> <Text style={styles.signupLink}> Cadastre-se</Text> </TouchableOpacity>
-    </View>
-    
+   <View>
 
    </View>
 
