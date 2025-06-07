@@ -1,208 +1,95 @@
-import axios from 'axios';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import Post from '@/components/ui/Post';
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import { Dimensions, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native";
 
+const { width, height } = Dimensions.get('screen');
 
-
-export default function HomeScreen() {
-  
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-const handleLogin = async () => {
-  if (!email || !password) {
-    Alert.alert('Por favor, preencha email e senha');
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const response = await axios.post('https://backend-production-9ab9.up.railway.app/users/login', {
-      email,
-      password,
-    });
-
-    if (response.status === 200) {
-      Alert.alert('Login efetuado com sucesso!');
-      console.log('login com sucesso')
-      router.push('/(tabs)/signUp');
-      
-    }
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        // Exibe mensagem amigável ao usuário, se disponível
-        Alert.alert('Erro', error.response.data?.message || 'Erro no servidor');
-        console.log('Erro de resposta do servidor', error.response.data);
-      } else if (error.request) {
-        Alert.alert('Erro', 'Servidor não respondeu. Tente novamente');
-      } else {
-        Alert.alert('Erro', 'Erro ao tentar fazer login.');
-      }
-    } else {
-      Alert.alert('Erro', 'Erro inesperado.');
-    }
-  } finally {
-    setLoading(false);
-  }
+type RootDrawerParamList = {
+  Home: undefined;
 };
 
-  
-  
-  
+type NavigationProp = DrawerNavigationProp<RootDrawerParamList>;
+
+export default function HomeScreen() {
+  const navigation = useNavigation<NavigationProp>();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadToken() {
+      const storedToken = await AsyncStorage.getItem('userToken');
+      setToken(storedToken);
+    }
+    loadToken();
+  }, []);
+
   return (
-   <View>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#27436b" />
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.leftGroup} onPress={() => navigation.openDrawer()}>
+          <Icon name="menu" size={30} color="#FFFFFF" />
+        </TouchableOpacity>
+        <View style={styles.rightGroup}>
+        <Icon name="bell-outline" size={30} color="#FFFFFF" />
+        <Icon name="fire" size={30} color="#FFFFFF" />
+        </View>
+      </View>
+      <ScrollView style={styles.contentContainer} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Post/>
+        <Post/>
+        <Post/>
+      </ScrollView>
+      <View style={styles.footer}>
+        <Icon name="home" size={50} color="#FFFFFF" />
+        <Icon name="coffee" size={50} color="#FFFFFF" />
 
-   </View>
+        <View style={{backgroundColor: '#2DB3BC', borderRadius: 300}}>
+          <Icon name="plus" size={50} color="#FFFFFF" />
+        </View>
 
-
+        <Icon name="calendar-clock" size={50} color="#FFFFFF" />
+        <Icon name="account" size={50} color="#FFFFFF" />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-
-    flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    backgroundColor: '#0D223F'
-
-  },
-
-  contentContainer: {
-
- 
-
-  },
-
-  logoContainer: {
-
-
-  },
-
-  logo: {
-
-    height: 150,
-    width: 150,
-    margin: 'auto',
-
-  },
-
-  loginTitle: {
-
-    color: '#ffffff',
-    margin: 'auto',
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 30
-
-
-  },
-
-  forgotPassword: {
-
-    textAlign: 'right',
-    display: 'flex',
-    margin: 'auto',
-    color: '#FFFFFF',
-    marginBottom: 10
-    
-  },
-
-  loginButton: {
-
-    backgroundColor: '#48D1CC',
-    borderRadius: 7,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-
-  },
-
-  loginButtonText: {
-    margin: 'auto',
-    fontSize: 16,
-    fontWeight: 'bold'
-
-  },
-
-  containerSeparator: {
-
-    padding: 20,
-
-  },
-
-  separator: {
-
-    flexDirection: 'row', 
-    alignItems: 'center',
-    width: '100%',
-    marginVertical: 10,
-
-  },
-
-  textLine: {
-
-    color: '#a9a9a9',
-    fontSize: 16,
-    marginHorizontal: 10,
-    backgroundColor: '#0D223F',
-
-  },
-
-  line: {
-
-    flex: 1, 
-    height: 1, 
-    backgroundColor: '#A9A9A9', 
-
-  },
-
-  googleBtn: {
-
-    backgroundColor: '#FFFFFF',
-    borderRadius: 7,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    overflow: 'visible',
-
-  },
-
-  content: {
-
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10, 
-
-  },
-  text: {
-
-    color: '#0D223F',
-    fontWeight: 'bold',
-    fontSize: 16,
-
-  },
-
-signupContainer: {
-  position: 'absolute',       // Faz o container ficar posicionado relativo à tela toda
-  bottom: 20,                 // Distância da parte de baixo da tela
-  left: 0,
-  right: 0,
+container: {
+  
+},
+header: {
+  backgroundColor: '#27436b',
+  height: height * 0.08,
+  elevation: 5,
   flexDirection: 'row',
-  justifyContent: 'center',
   alignItems: 'center',
-  paddingHorizontal: 20,      // Para não grudar nas bordas
 },
-signupText: {
-  color: '#FFFFFF',
-  fontSize: 15,
+contentContainer: {
+  backgroundColor: '#1f3652',
+  height: height * 0.84,
 },
-signupLink: {
-  color: '#48D1CC',
-  fontSize: 15,
-}
+leftGroup: {
+  position: 'absolute',
+  left: 10,
+},
+rightGroup: {
+  position: 'absolute',
+  right: 20,
+  flexDirection: 'row',
+  columnGap: 20
+},
+footer: {
+  backgroundColor: '#27436b',
+  height: height * 0.05,
+  width: width,
+  elevation: 5,
+  flexDirection: 'row',
+  gap: width * 0.08
+},
+
 });

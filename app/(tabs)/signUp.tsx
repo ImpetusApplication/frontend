@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import {
   Alert,
   Linking,
@@ -13,16 +14,16 @@ import {
 } from 'react-native';
 
 
-
 export default function SignupScreen() {
   const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [birthDate, setBirthDate] = useState('');
+  const [birthdate, setBirthDate] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const formatBirthDate = (text: string) => {
     // Remove todos os caracteres não numéricos
@@ -40,9 +41,30 @@ export default function SignupScreen() {
     return formatted;
   };
 
-  const handleCreateAccount = () => {
-    // Validação básica
-    if (!name || !username || !email || !password || !confirmPassword || !birthDate) {
+const convertDateToISO = (dateStr: string) => {
+  const numbers = dateStr.replace(/\D/g, '');
+
+  if (numbers.length === 6) {
+    
+    const day = numbers.slice(0, 2);
+    const month = numbers.slice(2, 4);
+    const yearShort = numbers.slice(4, 6);
+    const year = `20${yearShort}`;
+    return `${year}-${month}-${day}`;
+  } else if (numbers.length === 8) {
+    
+    const day = numbers.slice(0, 2);
+    const month = numbers.slice(2, 4);
+    const year = numbers.slice(4, 8);
+    return `${year}-${month}-${day}`;
+  } else {
+    
+    return dateStr;
+  }
+};
+
+  const handleCreateAccount = async () => {
+    if (!name || !email || !password || !confirmPassword || !birthdate) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -55,13 +77,45 @@ export default function SignupScreen() {
       return;
     }
 
-    // Aqui você faria a chamada ao backend ou outra ação
-    Alert.alert('Sucesso', 'Conta criada com sucesso!');
+    setLoading(true);
+
+    const birthdateConverted = convertDateToISO(birthdate);
+
+    try {
+      const response = await axios.post('https://backend-production-9ab9.up.railway.app/users' , {
+        name,
+        email,
+        birthdate: birthdateConverted,
+        password,
+      }); 
+      console.log(name);
+      console.log(email);
+      console.log(birthdate);
+      console.log(password);
+      if (response.status === 201) {
+        Alert.alert('Sucesso', 'Conta criada com sucesso!');
+        router.push('/(tabs)'); 
+      }
+    
+    } catch (error: unknown) {
+      if(axios.isAxiosError(error)){
+        if (error.response) {
+          Alert.alert('Erro', error.response.data?.message || `Erro ${error.response.data.error}`);
+        } else if (error.request) {
+          Alert.alert('Erro', 'Servidor não respondeu. Tente novamente');
+        } else {
+          Alert.alert('Erro', 'Erro inesperado. Tente novamente');
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+    
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.push('/(tabs)')}>
         <Icon name="arrow-left" size={24} color="#52b6cb" />
       </TouchableOpacity>
 
@@ -78,17 +132,7 @@ export default function SignupScreen() {
         />
       </View>
 
-      <View style={styles.inputGroup}>
-        <Icon name="account-circle" size={20} color="#52b6cb" style={styles.icon} />
-        <TextInput
-          style={styles.input}
-          placeholder="Escolha um nome de usuário"
-          placeholderTextColor="#a0a0a0"
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-      </View>
+
 
       <View style={styles.inputGroup}>
         <Icon name="email" size={20} color="#52b6cb" style={styles.icon} />
@@ -107,9 +151,9 @@ export default function SignupScreen() {
         <Icon name="calendar" size={20} color="#52b6cb" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Data de nascimento (DD-MM-AAAA)"
+          placeholder="Data de nascimento"
           placeholderTextColor="#a0a0a0"
-          value={birthDate}
+          value={birthdate}
           onChangeText={(text) => setBirthDate(formatBirthDate(text))}
           keyboardType="numeric"
           maxLength={10}
@@ -120,7 +164,7 @@ export default function SignupScreen() {
         <Icon name="lock" size={20} color="#52b6cb" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Crie uma senha (mín. 8 caracteres)"
+          placeholder="Crie uma senha"
           placeholderTextColor="#a0a0a0"
           secureTextEntry={!showPassword}
           value={password}
