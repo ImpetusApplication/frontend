@@ -3,6 +3,7 @@ import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from "react";
 import { Dimensions, ScrollView, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -28,14 +29,18 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#27436b" />
+      <StatusBar barStyle="light-content" backgroundColor="#27436B" />
       <View style={styles.header}>
         <TouchableOpacity style={styles.leftGroup} onPress={() => navigation.openDrawer()}>
           <Icon name="menu" size={30} color="#FFFFFF" />
         </TouchableOpacity>
         <View style={styles.rightGroup}>
-        <Icon name="bell-outline" size={30} color="#FFFFFF" />
-        <Icon name="fire" size={30} color="#FFFFFF" />
+          <TouchableOpacity onPress={() => router.push('/(tabs)/notificationScreen')}>
+            <Icon name="bell-outline" size={30} color="#FFFFFF" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/streakScreen')}>
+            <Icon name="fire" size={30} color="#FFFFFF" />
+          </TouchableOpacity>
         </View>
       </View>
       <ScrollView style={styles.contentContainer} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -44,15 +49,27 @@ export default function HomeScreen() {
         <Post/>
       </ScrollView>
       <View style={styles.footer}>
-        <Icon name="home" size={50} color="#FFFFFF" />
-        <Icon name="coffee" size={50} color="#FFFFFF" />
+        <TouchableOpacity>
+          <Icon name="home" size={35} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="coffee" size={35} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={{backgroundColor: '#2DB3BC', borderRadius: 300}}>
+            <Icon name="plus" size={35} color="#FFFFFF" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+         <Icon name="calendar-clock" size={35} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="account" size={35} color="#FFFFFF" />
+        </TouchableOpacity>
 
-        <View style={{backgroundColor: '#2DB3BC', borderRadius: 300}}>
-          <Icon name="plus" size={50} color="#FFFFFF" />
-        </View>
-
-        <Icon name="calendar-clock" size={50} color="#FFFFFF" />
-        <Icon name="account" size={50} color="#FFFFFF" />
+        
+        
+        
       </View>
     </View>
   );
@@ -60,7 +77,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
 container: {
-  
+  flex: 1,
+  justifyContent: 'space-between'
 },
 header: {
   backgroundColor: '#27436b',
@@ -85,11 +103,12 @@ rightGroup: {
 },
 footer: {
   backgroundColor: '#27436b',
-  height: height * 0.05,
+  height: height * 0.06, // Tamanho fixo para o footer
   width: width,
   elevation: 5,
   flexDirection: 'row',
-  gap: width * 0.08
+  justifyContent: 'space-around', // Distribui os ícones de forma espaçada
+  alignItems: 'center', // Alinha os ícones verticalmente no centro
 },
 
 });

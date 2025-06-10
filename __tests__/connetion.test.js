@@ -6,7 +6,6 @@ describe('Testa conexão com a API', () => {
   const mock = new MockAdapter(axios);
 
   beforeAll(() => {
-    // Mocka GET para baseUrl retornando status 200 e algum dado
     mock.onGet(baseUrl).reply(200, { success: true });
   });
 

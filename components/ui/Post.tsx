@@ -1,6 +1,8 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import HeartButton from './heartButton';
+
 
 const { width, height } = Dimensions.get('screen');
 export default function Post() {
@@ -26,7 +28,8 @@ return (
 
     </View>
     <View style={styles.bottom}>
-        <Icon name="heart-outline" size={25} color="#2DB3BC"/>
+        
+        <HeartButton/>
         <Text style={{color:'#FFFFFF'}}> 25</Text>
         <View style={{position:'absolute', right:15, flexDirection:'row'}}>
             <Icon name="comment" size={25} color="#FFFFFF"/>
@@ -52,7 +55,7 @@ content: {
     shadowOpacity: 1,
     shadowRadius: 6,
     elevation: 8,
-    padding: 10
+    padding: 10,
 },
 
 header: {
