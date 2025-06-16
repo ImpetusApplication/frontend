@@ -3,10 +3,7 @@ import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 
 const HeartButton = () => {
-  // Estado para controlar se o coração está preenchido ou não
   const [isFavorite, setIsFavorite] = useState(false);
-
-  // Função para alternar o estado do ícone
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
   };

@@ -74,7 +74,7 @@ export default function LoginScreen() {
         <IconInput value={password} onChangeText={setPassword} keyboardType={"default"} iconName="lock" placeholder="Senha" secureTextEntry={true} color={'#A9A9A9'}/> 
         
         <View style={{flexDirection: 'row', justifyContent: 'flex-end', width: '100%', marginBottom: 20}}>
-          <TouchableOpacity onPress={() => router.push('/(tabs)/telaInicial')}>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/forgotPassword')}>
             <Text style={{color: '#48D1CC'}}>Esqueci minha senha</Text>
           </TouchableOpacity>
         </View>

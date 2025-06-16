@@ -63,7 +63,7 @@ export default function HomeScreen() {
         <TouchableOpacity>
          <Icon name="calendar-clock" size={35} color="#FFFFFF" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {router.push('/(tabs)/ProfileScreen')}}>
           <Icon name="account" size={35} color="#FFFFFF" />
         </TouchableOpacity>
 
