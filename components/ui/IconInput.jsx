@@ -1,10 +1,10 @@
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StyleSheet, TextInput, View } from 'react-native';
-
-
 
 export default function IconInput({ iconName, placeholder, secureTextEntry, color, keyboardType, onChangeText, value}) {
     return (
         <View style={styles.container} >
+            {iconName && <Icon name={iconName} size={20} color={color} style={styles.icon} />}
             <TextInput keyboardType={keyboardType} onChangeText={onChangeText} value={value} style={styles.input} placeholder={placeholder} secureTextEntry={secureTextEntry} placeholderTextColor={color}/>
         </View>
         

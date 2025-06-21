@@ -1,23 +1,26 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React from "react";
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 
 const { width, height } = Dimensions.get('screen');
 
-type RootDrawerParamList = {
-  Home: undefined;
-};
+interface HeaderProps {
+  setDrawerVisible?: (visible: boolean) => void;
+}
 
-type NavigationProp = DrawerNavigationProp<RootDrawerParamList>;
+export function Header({ setDrawerVisible }: HeaderProps) {
+    const handleMenuPress = () => {
+      if (setDrawerVisible) {
+        setDrawerVisible(true);
+      } else {
+        console.warn('setDrawerVisible function not provided to Header');
+      }
+    };
 
-export function Header() {
-    const navigation = useNavigation<NavigationProp>();
     return(
         <View style={styles.header}>
-        <TouchableOpacity style={styles.leftGroup} onPress={() => navigation.openDrawer()}>
+        <TouchableOpacity style={styles.leftGroup} onPress={handleMenuPress}>
           <Icon name="menu" size={30} color="#FFFFFF" />
         </TouchableOpacity>
         <View style={styles.rightGroup}>
