@@ -1,9 +1,10 @@
 import Calendar from "@/components/ui/Calendar";
+import NavBar from "@/components/ui/navBar";
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const { width, height } = Dimensions.get('screen');
 
@@ -20,6 +21,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#27436B" />
       <View style={styles.header}>
         <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center', gap: 5}} onPress={() => {router.push('/(tabs)/telaInicial')}}>
           <Icon name="arrow-left" size={30} color="#FFFFFF" />
@@ -54,6 +56,7 @@ export default function ProfileScreen() {
           <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Ver todos os dias</Text>
         </View>
       </TouchableOpacity>
+      <NavBar/>
     </View>
   );
 }
@@ -115,6 +118,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: 'center',
     borderRadius: 10,
-    padding: 10
+    padding: 10,
   },
 });
