@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         position: 'absolute',
-        bottom: 1
+        bottom: 0
     },
 })

@@ -42,7 +42,7 @@ header: {
   elevation: 5,
   flexDirection: 'row',
   alignItems: 'center',
-  width: width
+  width: width,
 },
 leftGroup: {
   position: 'absolute',
